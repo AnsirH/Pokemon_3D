@@ -151,8 +151,6 @@ public class PlayerMove : MonoBehaviour
 
         if (dir != Vector3.zero)
         {
-            camDir = Camera.main.transform.TransformDirection(dir);
-            targetRot = Quaternion.LookRotation(camDir);
 
             if (onLongGrass)
             {
@@ -161,8 +159,7 @@ public class PlayerMove : MonoBehaviour
                 if (travelDistance >= 3f)
                     CheckForEncounters();
             }
-            
-
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(dir), Time.deltaTime * rotSpeed);
 
             anim.SetBool("Walk", true);
         }
@@ -170,7 +167,6 @@ public class PlayerMove : MonoBehaviour
             anim.SetBool("Walk", false);
 
 
-        transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, Time.deltaTime * rotSpeed);
         
 
     }
@@ -184,8 +180,8 @@ public class PlayerMove : MonoBehaviour
         if (randNum < 16)
         {
             Debug.Log("포켓몬 나왔당, 나온 숫자" + randNum);
+            anim.SetBool("Walk", false);
             OnEncountered();
-
         }
         else
         {
