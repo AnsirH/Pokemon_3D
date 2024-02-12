@@ -6,13 +6,14 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    public float moveSpeed = 10.0f;
+    public float moveSpeed = 1.5f;
 
     public float rotateSpeed = 50.0f;
 
     Rigidbody rigid;
     Animator anim;
 
+    Vector3 relativeDirection = Vector3.zero;
     Vector3 direction;
 
     private void Awake()
@@ -41,6 +42,12 @@ public class PlayerController : MonoBehaviour
             Quaternion rotateValue = Quaternion.RotateTowards(transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
 
             transform.rotation = rotateValue;
+
+
+            Vector3 moveVectorDirection = (transform.InverseTransformDirection(direction) - relativeDirection).normalized;
+            relativeDirection += moveVectorDirection * 2.5f* Time.deltaTime;
+            anim.SetFloat("XDirection", relativeDirection.x);
+            anim.SetFloat("ZDirection", relativeDirection.z);
         }
     }
 
@@ -49,5 +56,6 @@ public class PlayerController : MonoBehaviour
         Vector2 inputVector = value.Get<Vector2>();
         direction = new Vector3(inputVector.x, 0.0f, inputVector.y);
         anim.SetFloat("Speed", direction.magnitude);
+
     }
 }
