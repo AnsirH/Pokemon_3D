@@ -1,61 +1,60 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Security.Cryptography;
+using Pokemon3D.ScriptableObj;
 using UnityEngine;
-using UnityEngine.InputSystem;
-
-public class PlayerController : MonoBehaviour
+namespace Pokemon3D.Player
 {
-    public float moveSpeed = 1.5f;
-
-    public float rotateSpeed = 50.0f;
-
-    Rigidbody rigid;
-    Animator anim;
-
-    Vector3 relativeDirection = Vector3.zero;
-    Vector3 direction;
-
-    private void Awake()
+    public class PlayerController : MonoBehaviour
     {
-        rigid = GetComponent<Rigidbody>();
-        anim = GetComponent<Animator>();
-    }
+        [Header("컴포넌트")]
+        [SerializeField] PlayerInputHandler inputHandler;
+        [SerializeField] PlayerMovement movement;
+        [SerializeField] PlayerAnimatorController animatorController;
 
-    private void FixedUpdate()
-    {
-        if (direction != Vector3.zero)
+        [Header("변수")]
+        [SerializeField] PlayerData playerData;
+
+        // 개인 변수들
+        private bool isMoving => inputHandler.GetMovementInput().magnitude > 0.1f;
+        private bool isInitialized = false;
+
+        private void Awake()
         {
-            rigid.MovePosition(rigid.position + direction * moveSpeed * Time.fixedDeltaTime);
+            InitializeComponents();
         }
-    }
 
-    //private void Update()
-    //{
-    //}
-
-    private void LateUpdate()
-    {
-        if (direction != Vector3.zero)
+        private void Start()
         {
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
-            Quaternion rotateValue = Quaternion.RotateTowards(transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
-
-            transform.rotation = rotateValue;
-
-
-            Vector3 moveVectorDirection = (transform.InverseTransformDirection(direction) - relativeDirection).normalized;
-            relativeDirection += moveVectorDirection * 2.5f* Time.deltaTime;
-            anim.SetFloat("XDirection", relativeDirection.x);
-            anim.SetFloat("ZDirection", relativeDirection.z);
+            SetupComponentReferences();
+            isInitialized = true;
         }
-    }
 
-    void OnMove(InputValue value)
-    {
-        Vector2 inputVector = value.Get<Vector2>();
-        direction = new Vector3(inputVector.x, 0.0f, inputVector.y);
-        anim.SetFloat("Speed", direction.magnitude);
+        // 하위 컴포넌트 초기화
+        private void InitializeComponents()
+        {
+            if (inputHandler == null)
+                inputHandler = GetComponent<PlayerInputHandler>();
+            if (movement == null)
+                movement = GetComponent<PlayerMovement>();
+            if (animatorController == null)
+                animatorController = GetComponent<PlayerAnimatorController>();
+        }
 
+
+        private void SetupComponentReferences()
+        {
+            // 이동 컨트롤러 설정
+            if (movement != null)
+            {
+                movement.Initialize(playerData);
+            }
+        }
+
+        private void Update()
+        {
+            if (!isInitialized)
+                return;
+
+            movement.Move(inputHandler.GetMovementInput(), inputHandler.GetRunInput());
+            animatorController.MoveAnim(isMoving, inputHandler.GetMovementInput(), movement.GetCurrentSpeed(), inputHandler.GetRunInput());
+        }
     }
 }
