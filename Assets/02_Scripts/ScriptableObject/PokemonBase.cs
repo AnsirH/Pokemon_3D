@@ -5,6 +5,13 @@ using Pokemon3D.Enum;
 
 namespace Pokemon3D.ScriptableObj
 {
+    [System.Serializable]
+    public struct LearnableMove
+    {
+        public int RequireLevel;
+        public MoveBase MoveBase;
+    }
+
     [CreateAssetMenu(fileName = "NewPokemonBase", menuName = "SO/Create New Pokemon Base")]
     public class PokemonBase : ScriptableObject
     {
@@ -29,12 +36,11 @@ namespace Pokemon3D.ScriptableObj
         public PokemonBase EvolvesTo;               // 진화 후 포켓몬
 
         [Header("기술")]
-        public MoveBase[] LearnableMoves;
+        public LearnableMove[] LearnableMoves;
 
         [Header("리소스")]
         public Sprite BattleSprite;                 // 전투용 스프라이트
         public GameObject Model;                    // 3D 모델
         public AudioClip CrySound;                  // 울음소리
-        public AnimatorOverrideController Animator; // 애니메이션 컨트롤러
     }
 }

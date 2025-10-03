@@ -31,7 +31,6 @@ namespace Pokemon3D.Pokemon
         private void Start()
         {
             RegisterPokemon(CreatePokemonData(testPokemonBase, 5));
-            Debug.Log(HeadPokemon.Base.Name);
         }
 
         public bool RegisterPokemon(PokemonData pokemon)

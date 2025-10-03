@@ -1,5 +1,6 @@
 using Pokemon3D.ScriptableObj.PokemonMovementBehaviour;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Pokemon3D.BattleSystem.Unit
@@ -9,7 +10,7 @@ namespace Pokemon3D.BattleSystem.Unit
 		public event Action OnSpawn;
 		public event Action OnReturn;
 		public event Action OnIdle;
-		public event Action<PokemonBehaviour, Transform> OnAttack;
+		public event Action<List<PokemonBehaviour>, Transform> OnAttack;
 		public event Action OnHit;
 		public event Action OnDie;
 		public event Action OnItemUse;
@@ -17,7 +18,7 @@ namespace Pokemon3D.BattleSystem.Unit
 		public void DoSpawn();
 		public void DoReturn();
 		public void DoIdle();
-		public void DoAttack(PokemonBehaviour pokemonBehaviour, Transform target);
+		public void DoAttack(List<PokemonBehaviour> pokemonBehaviours, Transform target);
 		public void DoHit();
 		public void DoDie();
 		public void DoItemUse();

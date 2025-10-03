@@ -11,6 +11,7 @@ namespace Pokemon3D.Pokemon
         private int level;
         private int currentHp;
         private int currentExp;
+        private List<MoveBase> moves;
 
         public PokemonBase Base => _base;
         public int Level => level;
@@ -40,6 +41,8 @@ namespace Pokemon3D.Pokemon
                 if (currentExp < 0) currentExp = 0;
             }
         }
+        public List<MoveBase> Moves => moves;
+        public MoveBase RandomMoveBase { get { return moves[Random.Range(0, moves.Count)]; } }
 
         public PokemonData(PokemonBase pokemonBase, int level)
         {
@@ -47,6 +50,37 @@ namespace Pokemon3D.Pokemon
             this.level = level;
             currentHp = MaxHP;
             currentExp = 0;
+            moves = new List<MoveBase>();
+            foreach (var move in pokemonBase.LearnableMoves)
+            {
+                if (move.RequireLevel <= level)
+                {
+                    if (moves.Count >= 4)
+                    {
+                        int damageableMoveCount = 0;
+                        List<int> removeableIndexes = new() { 0, 1, 2, 3 };
+                        for (int i = 0; i < moves.Count; ++i)
+                        {
+                            if (moves[i].IsDamageable)
+                            {
+                                damageableMoveCount++;
+                                removeableIndexes.Remove(i);
+                            }
+                        }
+                        if (damageableMoveCount < 2)
+                        {
+                            if (move.MoveBase.IsDamageable)
+                                moves[Random.Range(0, moves.Count)] = move.MoveBase;
+                            else
+                                moves[removeableIndexes[Random.Range(0, removeableIndexes.Count)]] = move.MoveBase;
+                        }
+                    }
+                    else
+                    {
+                        moves.Add(move.MoveBase);
+                    }
+                }
+            }
         }
     }
 }

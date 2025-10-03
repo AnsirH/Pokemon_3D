@@ -24,8 +24,9 @@ MonoBehaviour:
   CatchRate: 0
   BaseExpYield: 0
   EvolvesTo: {fileID: 0}
-  LearnableMoves: []
+  LearnableMoves:
+  - RequireLevel: 1
+    MoveBase: {fileID: 11400000, guid: 9c4cc8f128c156c4c831656ca6a5e3fe, type: 2}
   BattleSprite: {fileID: 0}
   Model: {fileID: 66630164493967813, guid: 4473002ab01d4dc478b8f3712b8a79df, type: 3}
   CrySound: {fileID: 0}
-  Animator: {fileID: 0}

@@ -29,7 +29,7 @@ namespace Pokemon3D.Surface
                 {
                     GameFlowManager.Instance.StartBattle(
                         PokemonManager.Instance.CreatePokemonData(wildOccurrenceData.WildPokemonOccurrenceProbability[i].pokemonBase,wildOccurrenceData.MaxLevel, wildOccurrenceData.MinLevel),
-                        BattleType.Wild);
+                        BattleOpponentType.Wild);
                 }
                 else
                 {

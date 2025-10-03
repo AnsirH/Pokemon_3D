@@ -12,13 +12,13 @@ namespace Pokemon3D.Core
     {
         // variables
         PokemonData enemyPokemon;
-        BattleType battleType;
+        BattleOpponentType battleType;
 
         // properties
         public PokemonData EnemyPokemon => enemyPokemon;
-        public BattleType BattleType => battleType;
+        public BattleOpponentType BattleType => battleType;
 
-        public void StartBattle(PokemonData enemyPokemonData, BattleType battleType)
+        public void StartBattle(PokemonData enemyPokemonData, BattleOpponentType battleType)
         {
             this.enemyPokemon = enemyPokemonData;
             this.battleType = battleType;

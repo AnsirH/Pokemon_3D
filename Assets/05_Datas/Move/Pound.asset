@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbbebec10e505ee439c9cbaa7a609d93, type: 3}
+  m_Name: Pound
+  m_EditorClassIdentifier: 
+  MoveName: "\uB9C9\uCE58\uAE30"
+  Description: "\uAE34 \uAF2C\uB9AC\uB098 \uC190 \uB4F1\uC744 \uC0AC\uC6A9\uD558\uC5EC
+    \uC0C1\uB300\uB97C \uB54C\uB824\uC11C \uACF5\uACA9\uD55C\uB2E4."
+  Type: 1
+  Category: 0
+  Power: 40
+  Accuracy: 100
+  PP: 35
+  Priority: 0
+  InflictStatus: 0
+  StatusChance: 0
+  StatChanges: []
+  Target: 0
+  EffectAnimation: {fileID: 0}
+  SoundEffect: {fileID: 0}
+  PokemonBehaviours:
+  - {fileID: 11400000, guid: 9bab11e5214a6cd429fccbeb3a4e785f, type: 2}

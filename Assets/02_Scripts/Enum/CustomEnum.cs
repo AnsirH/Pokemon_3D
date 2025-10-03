@@ -87,11 +87,32 @@ namespace Pokemon3D.Enum
         End
     }
 
-    public enum BattleType
+    public enum BattleOpponentType
     {
         // 야생
         Wild,
         // 트레이너
         Trainer
+    }
+
+    public enum BattleTextCase
+    {
+        WildBattleStart,
+        NpcBattleStart,
+        SpawnPokemon,
+        PlayerPokemonAttack,
+        WildEnemyPokemonAttack,
+        NpcEnemyPokemonAttack,
+        Ineffective,
+        Effective
+    }
+
+    public enum ActionType
+    {
+        None,
+        Attack,
+        Item,
+        Switch,
+        Run
     }
 }

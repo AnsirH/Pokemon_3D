@@ -10,7 +10,10 @@ namespace Pokemon3D.BattleSystem.Unit
 	{
         [Header("references")]
         [SerializeField] PokemonActionController pokemonAnim;
+        [SerializeField] Transform modelParent;
 
+        [Header("references")]
+        [SerializeField] bool isPlayerUnit;
         // variables
         GameObject pokemonModel;
 
@@ -18,7 +21,7 @@ namespace Pokemon3D.BattleSystem.Unit
         public event Action OnSpawn;
         public event Action OnReturn;
         public event Action OnIdle;
-        public event Action<PokemonBehaviour, Transform> OnAttack;
+        public event Action<List<PokemonBehaviour>, Transform> OnAttack;
         public event Action OnHit;
         public event Action OnDie;
         public event Action OnItemUse;
@@ -34,9 +37,9 @@ namespace Pokemon3D.BattleSystem.Unit
             OnItemUse = null;
         }
 
-        public void DoAttack(PokemonBehaviour pokemonBehaviour, Transform target)
+        public void DoAttack(List<PokemonBehaviour> pokemonBehaviours, Transform target)
         {
-            OnAttack?.Invoke(pokemonBehaviour, target);
+            OnAttack?.Invoke(pokemonBehaviours, target);
         }
 
         public void DoDie()
@@ -72,15 +75,22 @@ namespace Pokemon3D.BattleSystem.Unit
         public void Initialize()
         {
             pokemonAnim.Initialize(this);
+            if (isPlayerUnit)
+                InstantiateModel(BattleSystem.Instance.PlayerPokemon.Base.Model, false);
+            else
+                InstantiateModel(BattleSystem.Instance.EnemyPokemon.Base.Model, BattleSystem.Instance.IsWildBattle);
         }
 
-        public void InstantiateModel(GameObject pokemonModel)
+        private void InstantiateModel(GameObject pokemonModel, bool isWild)
         {
+            if (isWild)
+                modelParent.localScale = Vector3.one;
+
             if (this.pokemonModel != null){
                 Destroy(this.pokemonModel);
                 this.pokemonModel = null;
             }
-            this.pokemonModel = Instantiate(pokemonModel, transform);
+            this.pokemonModel = Instantiate(pokemonModel, modelParent);
             this.pokemonModel.transform.localPosition = Vector3.zero;
             this.pokemonModel.transform.localRotation = Quaternion.identity;
             this.pokemonModel.transform.localScale = Vector3.one;

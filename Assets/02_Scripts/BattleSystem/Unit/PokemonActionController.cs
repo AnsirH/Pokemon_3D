@@ -7,10 +7,14 @@ namespace Pokemon3D.BattleSystem.Unit
 {
     public class PokemonActionController : MonoBehaviour, IPokemonUnitSubComponent
     {
-        [Header("references")]
-        [SerializeField] Animator anim;
+        [Header("references")] 
+        [SerializeField] Animator unitAnim;
+        [SerializeField] Animator modelAnim;
+        [SerializeField] GameObject PokeBallObj;
 
         // 애니메이션 트리거명 상수
+        private readonly string spawnTrigger = "Spawn";
+        private readonly string despawnTrigger = "Despawn";
         private readonly string attackLeftTrigger = "AttackLeft";
         private readonly string attackRightTrigger = "AttackRight";
         private readonly string gunLeftTrigger = "GunLeft";
@@ -20,63 +24,73 @@ namespace Pokemon3D.BattleSystem.Unit
         // 이동 부울 상수
         private readonly string isMovingParameter = "IsMoving";
 
+        private void Awake()
+        {
+            if (unitAnim == null)
+                unitAnim = GetComponent<Animator>();
+        }
+
         public void Initialize(IPokemonUnitEventSource evenetSource)
         {
             evenetSource.OnAttack += PlayBehaviour;
+            evenetSource.OnSpawn += Spawn;
         }
 
-        public void PlayBehaviour(PokemonBehaviour behaviour, Transform target)
+        public void PlayBehaviour(List<PokemonBehaviour> behaviours, Transform target)
         {
-            StartCoroutine(behaviour.PlayMovement(this, target));
+            for (int i = 0; i < behaviours.Count; ++i)
+            {
+                StartCoroutine(behaviours[i].PlayMovement(this, target));
+            }
         }
 
         public void PlayAttack(bool isLeft)
         {
             if (isLeft)
-                anim.SetTrigger(attackLeftTrigger);
+                modelAnim.SetTrigger(attackLeftTrigger);
             else
-                anim.SetTrigger(attackRightTrigger);
+                modelAnim.SetTrigger(attackRightTrigger);
         }
         
         // 공격 애니메이션이 종료되었는지 여부
-        public bool IsAnimationFinished(bool isLeft)
+        public bool IsAnimationFinished()
         {
-            return anim.GetCurrentAnimatorStateInfo(0).IsName(isLeft ? attackLeftTrigger : attackRightTrigger);
+            return modelAnim.GetCurrentAnimatorStateInfo(0).IsName("Idle");
         }
 
         public void PlayGun(bool isLeft)
         {
             if (isLeft)
-                anim.SetTrigger(gunLeftTrigger);
+                modelAnim.SetTrigger(gunLeftTrigger);
             else
-                anim.SetTrigger(gunRightTrigger);
+                modelAnim.SetTrigger(gunRightTrigger);
         }
 
         // 총 애니메이션이 종료되었는지 여부
         public bool IsGunAnimationFinished(bool isLeft)
         {
-            return anim.GetCurrentAnimatorStateInfo(0).IsName(isLeft ? gunLeftTrigger : gunRightTrigger);
+            return modelAnim.GetCurrentAnimatorStateInfo(0).IsName(isLeft ? gunLeftTrigger : gunRightTrigger);
         }
 
         public void PlayHit()
         {
-            anim.SetTrigger(hitTrigger);
+            modelAnim.SetTrigger(hitTrigger);
         }
         
         public void PlayDie()
         {
-            anim.SetTrigger(dieTrigger);
+            modelAnim.SetTrigger(dieTrigger);
         }
 
         // 죽음 애니메이션이 종료되었는지 여부
         public bool IsDieAnimationFinished()
         {
-            return anim.GetCurrentAnimatorStateInfo(0).IsName(dieTrigger);
+            return modelAnim.GetCurrentAnimatorStateInfo(0).IsName(dieTrigger);
         }
 
         public void PlayMove(bool isMoving)
         {
-            anim.SetBool(isMovingParameter, isMoving);
+            modelAnim.SetBool(isMovingParameter, isMoving);
         }
 
         public void Move(Vector3 direction)
@@ -87,7 +101,18 @@ namespace Pokemon3D.BattleSystem.Unit
 
         public void SetAnimatorFromModel(GameObject pokemonModel)
         {
-            anim = pokemonModel.GetComponentInChildren<Animator>();
+            modelAnim = pokemonModel.GetComponentInChildren<Animator>();
+        }
+
+        public void Spawn()
+        {
+            unitAnim.enabled = true;
+            unitAnim.SetTrigger(spawnTrigger);
+        }
+
+        public void Despawn()
+        {
+            unitAnim.SetTrigger(despawnTrigger);
         }
     }
 }
