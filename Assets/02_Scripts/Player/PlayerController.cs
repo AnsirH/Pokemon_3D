@@ -7,7 +7,9 @@ namespace Pokemon3D.Player
         [Header("컴포넌트")]
         [SerializeField] PlayerInputHandler inputHandler;
         [SerializeField] PlayerMovement movement;
-        [SerializeField] PlayerAnimatorController animatorController;
+        [SerializeField] PlayerAnimationController animatorController;
+        [SerializeField] SurfaceChecker surfaceChecker;
+        [SerializeField] AudioSource audioSource;
 
         [Header("변수")]
         [SerializeField] PlayerData playerData;
@@ -15,6 +17,9 @@ namespace Pokemon3D.Player
         // 개인 변수들
         private bool isMoving => inputHandler.GetMovementInput().magnitude > 0.1f;
         private bool isInitialized = false;
+
+        // properties
+        public Vector3 MoveDirection => movement.GetMoveDirection();
 
         private void Awake()
         {
@@ -35,17 +40,20 @@ namespace Pokemon3D.Player
             if (movement == null)
                 movement = GetComponent<PlayerMovement>();
             if (animatorController == null)
-                animatorController = GetComponent<PlayerAnimatorController>();
+                animatorController = GetComponent<PlayerAnimationController>();
+            if (surfaceChecker == null)
+                surfaceChecker = GetComponent<SurfaceChecker>();
         }
 
 
         private void SetupComponentReferences()
         {
             // 이동 컨트롤러 설정
-            if (movement != null)
-            {
-                movement.Initialize(playerData);
-            }
+            movement.Initialize(playerData);
+
+            // 이벤트 등록
+            animatorController.OnFootstepEvent += PlaySurfaceSoundStep;
+            movement.OnStepEvent += ExecuteSurfaceEvent;
         }
 
         private void Update()
@@ -55,6 +63,16 @@ namespace Pokemon3D.Player
 
             movement.Move(inputHandler.GetMovementInput(), inputHandler.GetRunInput());
             animatorController.MoveAnim(isMoving, inputHandler.GetMovementInput(), movement.GetCurrentSpeed(), inputHandler.GetRunInput());
+        }
+
+        private void PlaySurfaceSoundStep()
+        {
+            audioSource.PlayOneShot(surfaceChecker.CheckSurface().SurfaceSound);
+        }
+
+        private void ExecuteSurfaceEvent()
+        {
+            surfaceChecker.CheckSurface().ExecuteSurfaceEvent(this);
         }
     }
 }

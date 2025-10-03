@@ -1,4 +1,5 @@
 using Pokemon3D.ScriptableObj;
+using System;
 using UnityEngine;
 
 namespace Pokemon3D.Player
@@ -12,6 +13,12 @@ namespace Pokemon3D.Player
         private PlayerData playerData;
         private float currentSpeed;
         private Vector3 moveDirection;
+        private float stepDistance = 0.75f;
+        private float moveDistance = 0;
+        private int stepCount = 0;
+
+        // events
+        public event Action OnStepEvent;
 
         // 이동 인터페이스
         public interface IMoveable
@@ -47,6 +54,14 @@ namespace Pokemon3D.Player
                 Vector3 movement = moveDirection * currentSpeed * Time.deltaTime;
                 characterController.Move(movement);
 
+                moveDistance += movement.magnitude;
+                if (moveDistance >= stepDistance)
+                {
+                    stepCount++;
+                    moveDistance = 0.0f;
+                    OnStepEvent?.Invoke();
+                }
+
                 // 회전 처리
                 Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, playerData.RotationSpeed * Time.deltaTime);
@@ -62,7 +77,7 @@ namespace Pokemon3D.Player
         public bool CanMove(Vector3 direction)
         {
             // 이동 방향의 장애물 체크
-            Vector3 checkPosition = transform.position + direction.normalized * 0.5f;
+            Vector3 checkPosition = transform.position + direction.normalized * 0.2f;
 
             // 작은 구체를 사용하여 충돌 체크
             Collider[] colliders = Physics.OverlapSphere(checkPosition, 0.3f);

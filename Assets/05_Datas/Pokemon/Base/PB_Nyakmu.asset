@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54b0a9637a607004b91234a06041b576, type: 3}
+  m_Name: PB_Nyakmu
+  m_EditorClassIdentifier: 
+  Name: "\uB0D1\uBB34"
+  Type_1: 1
+  Type_2: 10
+  MaxHP: 40
+  Attack: 45
+  Defense: 40
+  SpecialAttack: 35
+  SpecialDefense: 35
+  Speed: 56
+  CatchRate: 0
+  BaseExpYield: 0
+  EvolvesTo: {fileID: 0}
+  LearnableMoves: []
+  BattleSprite: {fileID: 0}
+  Model: {fileID: 66630164493967813, guid: 4473002ab01d4dc478b8f3712b8a79df, type: 3}
+  CrySound: {fileID: 0}
+  Animator: {fileID: 0}

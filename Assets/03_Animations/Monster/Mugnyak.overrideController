@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Mugnyak
+  m_Controller: {fileID: 9100000, guid: f946f6f3e469d9f4fbad8f8b83184ff2, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: -1751267851543557399, guid: 5179826d65ae57d4b989e6a6ab22e7cc, type: 3}
+    m_OverrideClip: {fileID: 7400000, guid: 4abe416455dd8ee4fb3253c1eed3fd75, type: 2}
+  - m_OriginalClip: {fileID: -5299060085235982570, guid: 5179826d65ae57d4b989e6a6ab22e7cc, type: 3}
+    m_OverrideClip: {fileID: 7400000, guid: d7dee876a7f53c240a4d1551aaa3f6b7, type: 2}
+  - m_OriginalClip: {fileID: 1943936104014587080, guid: 5179826d65ae57d4b989e6a6ab22e7cc, type: 3}
+    m_OverrideClip: {fileID: 7400000, guid: efc518fbab43072419c9c20950b215c3, type: 2}
+  - m_OriginalClip: {fileID: 4190567199857950945, guid: 5179826d65ae57d4b989e6a6ab22e7cc, type: 3}
+    m_OverrideClip: {fileID: 7400000, guid: 498566db32f3a1848a2cbd80656e9635, type: 2}
+  - m_OriginalClip: {fileID: 8030809488957223598, guid: 5179826d65ae57d4b989e6a6ab22e7cc, type: 3}
+    m_OverrideClip: {fileID: 7400000, guid: ab8a4cae54f2ec3469ae0add35d4fcd7, type: 2}
+  - m_OriginalClip: {fileID: -218947792165720475, guid: 5179826d65ae57d4b989e6a6ab22e7cc, type: 3}
+    m_OverrideClip: {fileID: 7400000, guid: 933c646ba64084541b1f23acd6862ecb, type: 2}
+  - m_OriginalClip: {fileID: -2533602672706719597, guid: 5179826d65ae57d4b989e6a6ab22e7cc, type: 3}
+    m_OverrideClip: {fileID: 7400000, guid: f5b0e7a51f4195146a1510caede49112, type: 2}
+  - m_OriginalClip: {fileID: 7349750484683171053, guid: 5179826d65ae57d4b989e6a6ab22e7cc, type: 3}
+    m_OverrideClip: {fileID: 7400000, guid: 952e45a168f4dd941ad712756ff6fa78, type: 2}

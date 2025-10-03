@@ -50,12 +50,10 @@ public class PlayerInputHandler : MonoBehaviour
         if (context.performed)
         {
             runInput = true;
-            Debug.Log("달리기 시작");
         }
         else if (context.canceled)
         {
             runInput = false;
-            Debug.Log("달리기 종료");
         }
     }
 }

@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54b0a9637a607004b91234a06041b576, type: 3}
+  m_Name: PB_Mugnyak
+  m_EditorClassIdentifier: 
+  Name: "\uBB34\uB0D1"
+  Type_1: 1
+  Type_2: 0
+  MaxHP: 40
+  Attack: 50
+  Defense: 40
+  SpecialAttack: 40
+  SpecialDefense: 40
+  Speed: 55
+  CatchRate: 0
+  BaseExpYield: 0
+  EvolvesTo: {fileID: 0}
+  LearnableMoves: []
+  BattleSprite: {fileID: 0}
+  Model: {fileID: 8279887161279386544, guid: b2105461e1dc2e64db34f05f0a063333, type: 3}
+  CrySound: {fileID: 0}
+  Animator: {fileID: 0}

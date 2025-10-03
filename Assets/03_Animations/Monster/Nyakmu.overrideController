@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Nyakmu
+  m_Controller: {fileID: 9100000, guid: f946f6f3e469d9f4fbad8f8b83184ff2, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: -1751267851543557399, guid: 5179826d65ae57d4b989e6a6ab22e7cc, type: 3}
+    m_OverrideClip: {fileID: 7400000, guid: cac55bf1fb4f9e54cb03b133b689fc08, type: 2}
+  - m_OriginalClip: {fileID: -5299060085235982570, guid: 5179826d65ae57d4b989e6a6ab22e7cc, type: 3}
+    m_OverrideClip: {fileID: 7400000, guid: dee3fd977b127294d87ea3cb683e6bba, type: 2}
+  - m_OriginalClip: {fileID: 1943936104014587080, guid: 5179826d65ae57d4b989e6a6ab22e7cc, type: 3}
+    m_OverrideClip: {fileID: 7400000, guid: ee730c259318c284aa862165f6975e84, type: 2}
+  - m_OriginalClip: {fileID: 4190567199857950945, guid: 5179826d65ae57d4b989e6a6ab22e7cc, type: 3}
+    m_OverrideClip: {fileID: 7400000, guid: 4572c16eb75e73e419b16794d13af21f, type: 2}
+  - m_OriginalClip: {fileID: 8030809488957223598, guid: 5179826d65ae57d4b989e6a6ab22e7cc, type: 3}
+    m_OverrideClip: {fileID: 7400000, guid: fd57e93810ee2284ab37bad4648ad848, type: 2}
+  - m_OriginalClip: {fileID: -218947792165720475, guid: 5179826d65ae57d4b989e6a6ab22e7cc, type: 3}
+    m_OverrideClip: {fileID: 7400000, guid: 865200320efadbb4980a4a6b46ec858f, type: 2}
+  - m_OriginalClip: {fileID: -2533602672706719597, guid: 5179826d65ae57d4b989e6a6ab22e7cc, type: 3}
+    m_OverrideClip: {fileID: 7400000, guid: c1cc543a1cdfe0d4a946bf164c37fb79, type: 2}
+  - m_OriginalClip: {fileID: 7349750484683171053, guid: 5179826d65ae57d4b989e6a6ab22e7cc, type: 3}
+    m_OverrideClip: {fileID: 7400000, guid: f7c7ce598042dd042a687e928e2684d6, type: 2}
