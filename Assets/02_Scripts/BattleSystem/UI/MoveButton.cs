@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using Pokemon3D.ScriptableObj;
+using Pokemon3D.Pokemon;
 
 namespace Pokemon3D.BattleSystem.UI
 {
@@ -13,18 +14,22 @@ namespace Pokemon3D.BattleSystem.UI
         [SerializeField] TextMeshProUGUI ppText;
 
         // variables
-        MoveBase moveBase;
+        MoveData moveData;
 
-        public void Initialize(MoveBase moveBase)
+        public void Initialize(MoveData moveData)
         {
-            nameText.text = moveBase.MoveName;
-            ppText.text = moveBase.PP.ToString();
-            this.moveBase = moveBase;
+            nameText.text = moveData.moveBase.MoveName;
+            ppText.text = moveData.pp.ToString();
+            this.moveData = moveData;
         }
 
         public void OnClick()
         {
-            BattleSystem.Instance.SelectMove(moveBase);
+            if (moveData.pp > 0)
+            {
+                BattleSystem.Instance.SelectPlayerMove(moveData.moveBase);
+                moveData.pp--;
+            }
         }
     }
 }

@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Pokemon3D.ScriptableObj.PokemonMovementBehaviour;
+using System;
 
 namespace Pokemon3D.BattleSystem.Unit
 {
-    public class PokemonActionController : MonoBehaviour, IPokemonUnitSubComponent
+    public class PokemonActionController : MonoBehaviour
     {
         [Header("references")] 
         [SerializeField] Animator unitAnim;
@@ -28,12 +29,6 @@ namespace Pokemon3D.BattleSystem.Unit
         {
             if (unitAnim == null)
                 unitAnim = GetComponent<Animator>();
-        }
-
-        public void Initialize(IPokemonUnitEventSource evenetSource)
-        {
-            evenetSource.OnAttack += PlayBehaviour;
-            evenetSource.OnSpawn += Spawn;
         }
 
         public void PlayBehaviour(List<PokemonBehaviour> behaviours, Transform target)
@@ -76,7 +71,7 @@ namespace Pokemon3D.BattleSystem.Unit
         {
             modelAnim.SetTrigger(hitTrigger);
         }
-        
+
         public void PlayDie()
         {
             modelAnim.SetTrigger(dieTrigger);
@@ -104,7 +99,7 @@ namespace Pokemon3D.BattleSystem.Unit
             modelAnim = pokemonModel.GetComponentInChildren<Animator>();
         }
 
-        public void Spawn()
+        public void PlaySpawn()
         {
             unitAnim.enabled = true;
             unitAnim.SetTrigger(spawnTrigger);

@@ -95,18 +95,6 @@ namespace Pokemon3D.Enum
         Trainer
     }
 
-    public enum BattleTextCase
-    {
-        WildBattleStart,
-        NpcBattleStart,
-        SpawnPokemon,
-        PlayerPokemonAttack,
-        WildEnemyPokemonAttack,
-        NpcEnemyPokemonAttack,
-        Ineffective,
-        Effective
-    }
-
     public enum ActionType
     {
         None,

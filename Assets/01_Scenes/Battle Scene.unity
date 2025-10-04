@@ -693,7 +693,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a29ea0715d898754cb163fef38f24812, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pokemonAnim: {fileID: 98567236}
+  pokemonAction: {fileID: 98567236}
   modelParent: {fileID: 2064277555}
   isPlayerUnit: 0
 --- !u!95 &98567238
@@ -6653,7 +6653,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a29ea0715d898754cb163fef38f24812, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pokemonAnim: {fileID: 2069511189}
+  pokemonAction: {fileID: 2069511189}
   modelParent: {fileID: 1802919059}
   isPlayerUnit: 1
 --- !u!95 &2069511191

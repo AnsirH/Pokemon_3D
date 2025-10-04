@@ -11,16 +11,18 @@ namespace Pokemon3D.BattleSystem.UI
 
         // variables
         Vector3 value;
+        int currentValue;
+        int maxValue;
 
-        public virtual void Initialize(int currentValue, int maxValue)
-        {
-            SetValue(currentValue, maxValue);
-        }
+        // properties
+        public int CurrentValue => currentValue;
 
         public virtual void SetValue(int currentValue, int maxValue)
         {
             if (maxValue < currentValue || maxValue == 0) return;
             if (currentValue < 0) currentValue = 0;
+            this.currentValue = currentValue;
+            this.maxValue = maxValue;
             SetValue((float)currentValue / maxValue);
         }
 

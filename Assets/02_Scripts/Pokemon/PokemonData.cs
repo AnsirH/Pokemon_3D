@@ -11,7 +11,7 @@ namespace Pokemon3D.Pokemon
         private int level;
         private int currentHp;
         private int currentExp;
-        private List<MoveBase> moves;
+        private List<MoveData> moves;
 
         public PokemonBase Base => _base;
         public int Level => level;
@@ -41,8 +41,8 @@ namespace Pokemon3D.Pokemon
                 if (currentExp < 0) currentExp = 0;
             }
         }
-        public List<MoveBase> Moves => moves;
-        public MoveBase RandomMoveBase { get { return moves[Random.Range(0, moves.Count)]; } }
+        public List<MoveData> Moves => moves;
+        public MoveBase RandomMoveBase { get { return moves[Random.Range(0, moves.Count)].moveBase; } }
 
         public PokemonData(PokemonBase pokemonBase, int level)
         {
@@ -50,7 +50,7 @@ namespace Pokemon3D.Pokemon
             this.level = level;
             currentHp = MaxHP;
             currentExp = 0;
-            moves = new List<MoveBase>();
+            moves = new List<MoveData>();
             foreach (var move in pokemonBase.LearnableMoves)
             {
                 if (move.RequireLevel <= level)
@@ -61,7 +61,7 @@ namespace Pokemon3D.Pokemon
                         List<int> removeableIndexes = new() { 0, 1, 2, 3 };
                         for (int i = 0; i < moves.Count; ++i)
                         {
-                            if (moves[i].IsDamageable)
+                            if (moves[i].moveBase.IsDamageable)
                             {
                                 damageableMoveCount++;
                                 removeableIndexes.Remove(i);
@@ -70,17 +70,31 @@ namespace Pokemon3D.Pokemon
                         if (damageableMoveCount < 2)
                         {
                             if (move.MoveBase.IsDamageable)
-                                moves[Random.Range(0, moves.Count)] = move.MoveBase;
+                                moves[Random.Range(0, moves.Count)] = new MoveData(move.MoveBase);
                             else
-                                moves[removeableIndexes[Random.Range(0, removeableIndexes.Count)]] = move.MoveBase;
+                                moves[removeableIndexes[Random.Range(0, removeableIndexes.Count)]] = new MoveData(move.MoveBase);
                         }
+                        else
+                            moves[Random.Range(0, moves.Count)] = new MoveData(move.MoveBase);
                     }
                     else
                     {
-                        moves.Add(move.MoveBase);
+                        moves.Add(new MoveData(move.MoveBase));
                     }
                 }
             }
+        }
+    }
+
+    public class MoveData
+    {
+        public MoveBase moveBase;
+        public int pp;
+
+        public MoveData(MoveBase moveBase)
+        {
+            this.moveBase = moveBase;
+            pp = moveBase.PP;
         }
     }
 }

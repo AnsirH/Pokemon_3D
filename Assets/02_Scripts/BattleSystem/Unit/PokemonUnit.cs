@@ -1,3 +1,5 @@
+using Pokemon3D.Pokemon;
+using Pokemon3D.ScriptableObj;
 using Pokemon3D.ScriptableObj.PokemonMovementBehaviour;
 using System;
 using System.Collections;
@@ -6,79 +8,44 @@ using UnityEngine;
 
 namespace Pokemon3D.BattleSystem.Unit
 {
-	public class PokemonUnit : MonoBehaviour, IPokemonUnitEventSource
+	public class PokemonUnit : MonoBehaviour
 	{
         [Header("references")]
-        [SerializeField] PokemonActionController pokemonAnim;
+        [SerializeField] PokemonActionController pokemonAction;
         [SerializeField] Transform modelParent;
 
         [Header("references")]
         [SerializeField] bool isPlayerUnit;
+
         // variables
         GameObject pokemonModel;
+        PokemonData pokemonData;
 
-        // events
-        public event Action OnSpawn;
-        public event Action OnReturn;
-        public event Action OnIdle;
-        public event Action<List<PokemonBehaviour>, Transform> OnAttack;
-        public event Action OnHit;
-        public event Action OnDie;
-        public event Action OnItemUse;
+        // properties
+        public PokemonData PokemonData => pokemonData;
 
-        public void ClearEvent()
+        private void Awake()
         {
-            OnSpawn = null;
-            OnReturn = null;
-            OnIdle = null;
-            OnAttack = null;
-            OnHit = null;
-            OnDie = null;
-            OnItemUse = null;
+            if (pokemonAction == null)
+                pokemonAction = GetComponent<PokemonActionController>();
         }
 
-        public void DoAttack(List<PokemonBehaviour> pokemonBehaviours, Transform target)
+        public IEnumerator MoveAction(MoveBase moveBase, Transform target)
         {
-            OnAttack?.Invoke(pokemonBehaviours, target);
+            for (int i = 0; i < moveBase.PokemonBehaviours.Count; i++)
+            {
+                yield return StartCoroutine(moveBase.PokemonBehaviours[i].PlayMovement(pokemonAction, target));
+            }
         }
 
-        public void DoDie()
+        public void Initialize(PokemonData pokemonData)
         {
-            OnDie?.Invoke();
-        }
-
-        public void DoHit()
-        {
-            OnHit?.Invoke();
-        }
-
-        public void DoIdle()
-        {
-            OnIdle?.Invoke();
-        }
-
-        public void DoItemUse()
-        {
-            OnItemUse?.Invoke();
-        }
-
-        public void DoReturn()
-        {
-            OnReturn?.Invoke();
-        }
-
-        public void DoSpawn()
-        {
-            OnSpawn?.Invoke();
-        }
-
-        public void Initialize()
-        {
-            pokemonAnim.Initialize(this);
             if (isPlayerUnit)
-                InstantiateModel(BattleSystem.Instance.PlayerPokemon.Base.Model, false);
+                InstantiateModel(pokemonData.Base.Model, false);
             else
-                InstantiateModel(BattleSystem.Instance.EnemyPokemon.Base.Model, BattleSystem.Instance.IsWildBattle);
+                InstantiateModel(pokemonData.Base.Model, BattleSystem.Instance.IsWildBattle);
+
+            this.pokemonData = pokemonData;
         }
 
         private void InstantiateModel(GameObject pokemonModel, bool isWild)
@@ -94,7 +61,19 @@ namespace Pokemon3D.BattleSystem.Unit
             this.pokemonModel.transform.localPosition = Vector3.zero;
             this.pokemonModel.transform.localRotation = Quaternion.identity;
             this.pokemonModel.transform.localScale = Vector3.one;
-            pokemonAnim.SetAnimatorFromModel(this.pokemonModel);
+            pokemonAction.SetAnimatorFromModel(this.pokemonModel);
+        }
+
+        public void Spawn()
+        {
+            pokemonAction.PlaySpawn();
+        }
+
+        public void Hit(int damage)
+        {
+            pokemonData.CurrentHp -= damage;
+            if (pokemonData.CurrentHp < 0)
+                pokemonData.CurrentHp = 0;
         }
     }
 }

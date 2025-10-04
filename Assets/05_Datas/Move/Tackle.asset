@@ -29,3 +29,4 @@ MonoBehaviour:
   SoundEffect: {fileID: 0}
   PokemonBehaviours:
   - {fileID: 11400000, guid: 9bab11e5214a6cd429fccbeb3a4e785f, type: 2}
+  - {fileID: 11400000, guid: c1e9045f989086b499814910a1144d48, type: 2}

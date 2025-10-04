@@ -16,9 +16,6 @@ namespace Pokemon3D.ScriptableObj.PokemonMovementBehaviour
             {
                 yield return null;
             }
-            if (target.TryGetComponent(out PokemonActionController actionController))
-                actionController.PlayHit();
-            yield return null;
         }
     }
 }

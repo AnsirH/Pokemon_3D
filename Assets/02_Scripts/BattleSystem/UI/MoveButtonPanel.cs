@@ -1,8 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
-using Pokemon3D.ScriptableObj;
+using Pokemon3D.Pokemon;
 
 namespace Pokemon3D.BattleSystem.UI
 {
@@ -11,7 +10,7 @@ namespace Pokemon3D.BattleSystem.UI
         [Header("references")]
         [SerializeField] MoveButton[] moveButtons;
 
-        public void Initialize(List<MoveBase> moves)
+        public void Initialize(List<MoveData> moves)
         {
             for (int i = 0; i < moveButtons.Length; ++i)
             {
