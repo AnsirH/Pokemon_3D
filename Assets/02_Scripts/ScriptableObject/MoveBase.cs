@@ -10,7 +10,7 @@ namespace Pokemon3D.ScriptableObj
     public class MoveBase : ScriptableObject
     {
         [Header("기본 정보")]
-        [Tooltip("기술 이름")] public string MoveName;
+        [Tooltip("기술 이름")] public string Name;
         [TextArea][Tooltip("기술 설명(도감 등에서 보여줄 텍스트)")] public string Description;
         [Tooltip("기술 타입 (불, 물, 풀 등)")] public PokemonType Type;
         [Tooltip("기술 카테고리 (Physical: 물리 / Special: 특수 / Status: 상태)")] public MoveCategory Category;

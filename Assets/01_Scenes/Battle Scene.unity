@@ -282,7 +282,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.8}
+  m_Color: {r: 0.14716971, g: 0.14716971, b: 0.14716971, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -640,7 +640,6 @@ GameObject:
   m_Component:
   - component: {fileID: 98567235}
   - component: {fileID: 98567237}
-  - component: {fileID: 98567236}
   - component: {fileID: 98567238}
   m_Layer: 0
   m_Name: PokemonUnit
@@ -666,21 +665,6 @@ Transform:
   - {fileID: 1994983842}
   m_Father: {fileID: 184434127}
   m_LocalEulerAnglesHint: {x: 0, y: -133.317, z: 0}
---- !u!114 &98567236
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 98567234}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c3af4a1f36ba6f4582032903562a134, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  unitAnim: {fileID: 98567238}
-  modelAnim: {fileID: 0}
-  PokeBallObj: {fileID: 1994983843}
 --- !u!114 &98567237
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -693,8 +677,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a29ea0715d898754cb163fef38f24812, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pokemonAction: {fileID: 98567236}
+  actionController: {fileID: 0}
   modelParent: {fileID: 2064277555}
+  unitAnim: {fileID: 98567238}
+  PokeBallObj: {fileID: 1994983843}
   isPlayerUnit: 0
 --- !u!95 &98567238
 Animator:
@@ -2660,6 +2646,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 917968879}
   m_CullTransparentMesh: 1
+--- !u!1 &918751439
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 918751441}
+  - component: {fileID: 918751440}
+  m_Layer: 0
+  m_Name: Battle Text Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &918751440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 918751439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20c05315702087c42961f5318bf5f1ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dontDestroyOnLoad: 0
+--- !u!4 &918751441
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 918751439}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.6400023, y: 1.5165424, z: -3.016779}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &948081862
 GameObject:
   m_ObjectHideFlags: 0
@@ -2801,7 +2832,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 989614701}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b54d21e60f624604c9498d685da79b6a, type: 3}
+  m_Script: {fileID: 11500000, guid: 3c449dd38225c9d41869fcef6427ece7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   valueBar: {fileID: 799866605}
@@ -6272,7 +6303,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1972825020}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b54d21e60f624604c9498d685da79b6a, type: 3}
+  m_Script: {fileID: 11500000, guid: 3c449dd38225c9d41869fcef6427ece7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   valueBar: {fileID: 1583047589}
@@ -6600,7 +6631,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2069511188}
   - component: {fileID: 2069511190}
-  - component: {fileID: 2069511189}
   - component: {fileID: 2069511191}
   m_Layer: 0
   m_Name: PokemonUnit
@@ -6626,21 +6656,6 @@ Transform:
   - {fileID: 861225983}
   m_Father: {fileID: 3240343}
   m_LocalEulerAnglesHint: {x: 0, y: 47.229, z: 0}
---- !u!114 &2069511189
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2069511187}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c3af4a1f36ba6f4582032903562a134, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  unitAnim: {fileID: 2069511191}
-  modelAnim: {fileID: 0}
-  PokeBallObj: {fileID: 861225982}
 --- !u!114 &2069511190
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6653,8 +6668,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a29ea0715d898754cb163fef38f24812, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pokemonAction: {fileID: 2069511189}
+  actionController: {fileID: 0}
   modelParent: {fileID: 1802919059}
+  unitAnim: {fileID: 2069511191}
+  PokeBallObj: {fileID: 861225982}
   isPlayerUnit: 1
 --- !u!95 &2069511191
 Animator:
@@ -7193,3 +7210,4 @@ SceneRoots:
   - {fileID: 96436819}
   - {fileID: 2146709802}
   - {fileID: 2030519840}
+  - {fileID: 918751441}

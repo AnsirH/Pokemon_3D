@@ -15,14 +15,14 @@ namespace Pokemon3D.Pokemon
 
         public PokemonBase Base => _base;
         public int Level => level;
-        public int MaxHP => _base.MaxHP + Level * 2;
-        public int Attack => _base.Attack + Level;
-        public int Defense => _base.Defense + Level;
-        public int SpecialAttack => _base.SpecialAttack + Level;
-        public int SpecialDefense => _base.SpecialDefense + Level;
-        public int Speed => _base.Speed + Level;
-        public int RequireExpToLevelup => _base.BaseExpYield * _base.BaseExpYield * level;
-        public int RewardExp => _base.BaseExpYield * level;
+        public int MaxHP => Mathf.FloorToInt(((_base.MaxHP * 2f + 10f) * level / 100) + level + 10);
+        public int Attack => Mathf.FloorToInt((_base.Attack * 2f + 10f) * level / 100 + 5);
+        public int Defense => Mathf.FloorToInt((_base.Defense * 2f + 10f) * level / 100 + 5);
+        public int SpecialAttack => Mathf.FloorToInt((_base.SpecialAttack * 2f + 10f) * level / 100 + 5);
+        public int SpecialDefense => Mathf.FloorToInt((_base.SpecialDefense * 2f + 10f) * level / 100 + 5);
+        public int Speed => Mathf.FloorToInt((_base.Speed * 2f + 10f) * level / 100 + 5);
+        public int RequireExpToLevelup => Mathf.FloorToInt(Mathf.Pow(level, 2f));
+        public int RewardExp => Mathf.FloorToInt(_base.BaseExpYield * level / 5f);
         public int CurrentHp
         {
             get { return currentHp; }
@@ -83,6 +83,13 @@ namespace Pokemon3D.Pokemon
                     }
                 }
             }
+        }
+
+        public void Levelup()
+        {
+            if (level >= 100) return;
+            level++;
+            currentExp = 0;
         }
     }
 

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Pokemon3D.BattleSystem.UI
 {
-    public class HpBar : GagueBar
+    public class HpBar : GaugeBar
     {
         [Header("text")]
         [SerializeField] TMP_Text hpText;

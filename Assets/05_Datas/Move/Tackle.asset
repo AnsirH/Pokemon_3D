@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbbebec10e505ee439c9cbaa7a609d93, type: 3}
   m_Name: Tackle
   m_EditorClassIdentifier: 
-  MoveName: "\uBAB8\uD1B5\uBC15\uCE58\uAE30"
+  Name: "\uBAB8\uD1B5\uBC15\uCE58\uAE30"
   Description: "\uC0C1\uB300\uB97C \uD5A5\uD574\uC11C \uBAB8 \uC804\uCCB4\uB97C \uBD80\uB52A\uCCD0\uAC00\uBA70
     \uACF5\uACA9\uD55C\uB2E4."
   Type: 1
@@ -29,4 +29,3 @@ MonoBehaviour:
   SoundEffect: {fileID: 0}
   PokemonBehaviours:
   - {fileID: 11400000, guid: 9bab11e5214a6cd429fccbeb3a4e785f, type: 2}
-  - {fileID: 11400000, guid: c1e9045f989086b499814910a1144d48, type: 2}

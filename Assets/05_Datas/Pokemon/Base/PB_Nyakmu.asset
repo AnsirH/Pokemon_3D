@@ -22,7 +22,7 @@ MonoBehaviour:
   SpecialDefense: 35
   Speed: 56
   CatchRate: 0
-  BaseExpYield: 0
+  BaseExpYield: 25
   EvolvesTo: {fileID: 0}
   LearnableMoves:
   - RequireLevel: 1

@@ -20,4 +20,11 @@ namespace Pokemon3D.BattleSystem
         public ActionType type;
         public MoveBase moveBase;
     }
+
+    public struct AttackData
+    {
+        public bool isEffectiveness;
+        public bool isIneffectiveness;
+        public bool isCritical;
+    }
 }

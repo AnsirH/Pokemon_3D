@@ -18,7 +18,7 @@ namespace Pokemon3D.BattleSystem.UI
 
         public void Initialize(MoveData moveData)
         {
-            nameText.text = moveData.moveBase.MoveName;
+            nameText.text = moveData.moveBase.Name;
             ppText.text = moveData.pp.ToString();
             this.moveData = moveData;
         }

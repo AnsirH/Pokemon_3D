@@ -10,6 +10,7 @@ namespace Pokemon3D.Pokemon
     {
         [Header("테스트")]
         [SerializeField] PokemonBase testPokemonBase;
+        [SerializeField] int testPokemonLevel;
 
         // variables
         PokemonData[] pokemons = new PokemonData[6];
@@ -30,7 +31,7 @@ namespace Pokemon3D.Pokemon
 
         private void Start()
         {
-            RegisterPokemon(CreatePokemonData(testPokemonBase, 5));
+            RegisterPokemon(CreatePokemonData(testPokemonBase, testPokemonLevel));
         }
 
         public bool RegisterPokemon(PokemonData pokemon)

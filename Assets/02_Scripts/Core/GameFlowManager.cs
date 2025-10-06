@@ -20,9 +20,15 @@ namespace Pokemon3D.Core
 
         public void StartBattle(PokemonData enemyPokemonData, BattleOpponentType battleType)
         {
-            this.enemyPokemon = enemyPokemonData;
+            enemyPokemon = enemyPokemonData;
             this.battleType = battleType;
             SceneManager.LoadScene("Battle Scene");
+        }
+
+        public void EndBattle()
+        {
+            enemyPokemon = null;
+            SceneManager.LoadScene("Trip Scene");
         }
     }
 }

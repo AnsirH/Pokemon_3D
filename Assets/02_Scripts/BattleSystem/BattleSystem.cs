@@ -25,6 +25,7 @@ namespace Pokemon3D.BattleSystem
         ActionData enemyActionData;
         Coroutine currentCoroutine;
         bool isWildBattle = true;
+        bool battleIsOver = false;
 
         // properties
         public PokemonData PlayerPokemon => playerPokemonUnit.PokemonData;
@@ -46,8 +47,8 @@ namespace Pokemon3D.BattleSystem
             playerPokemonUnit.Initialize(PokemonManager.Instance.HeadPokemon);
             enemyPokemonUnit.Initialize(GameFlowManager.Instance.EnemyPokemon);
 
-            canvas.InitialPlayerHud(playerPokemonUnit.PokemonData);
-            canvas.InitialEnemyHud(enemyPokemonUnit.PokemonData);
+            canvas.InitialPlayerHud(playerPokemonUnit);
+            canvas.InitialEnemyHud(enemyPokemonUnit);
         }
 
         private void StartBattle()
@@ -63,30 +64,23 @@ namespace Pokemon3D.BattleSystem
             yield return StartCoroutine(SetupBattle());
             while (true)
             {
-                canvas.ActiveBattleHud(true);
-                canvas.ActiveActionButtons(true);
                 yield return StartCoroutine(PlayerTurn());
 
                 SelectEnemeyAction();
                 yield return new WaitUntil(() => currentState != BattleState.Processing);
 
                 canvas.ActiveActionButtons(false);
-
                 if (CheckPlayerFirst())
                 {
-                    yield return StartCoroutine(AttackProcess(playerPokemonUnit, enemyPokemonUnit, playerActionData));
-                    canvas.UpdateEnemyHpBar(enemyPokemonUnit.PokemonData);
+                    yield return StartCoroutine(TurnProcess(playerPokemonUnit, enemyPokemonUnit, playerActionData)); // 플레이어 턴 실행
 
-                    yield return StartCoroutine(AttackProcess(enemyPokemonUnit, playerPokemonUnit, enemyActionData));
-                    canvas.UpdatePlayerHpBar(playerPokemonUnit.PokemonData);
+                    yield return StartCoroutine(TurnProcess(enemyPokemonUnit, playerPokemonUnit, enemyActionData)); // 적 턴 실행
                 }
                 else
                 {
-                    yield return StartCoroutine(AttackProcess(enemyPokemonUnit, playerPokemonUnit, enemyActionData));
-                    canvas.UpdatePlayerHpBar(playerPokemonUnit.PokemonData);
+                    yield return StartCoroutine(TurnProcess(enemyPokemonUnit, playerPokemonUnit, enemyActionData)); // 적 턴 실행
 
-                    yield return StartCoroutine(AttackProcess(playerPokemonUnit, enemyPokemonUnit, playerActionData));
-                    canvas.UpdateEnemyHpBar(enemyPokemonUnit.PokemonData);
+                    yield return StartCoroutine(TurnProcess(playerPokemonUnit, enemyPokemonUnit, playerActionData)); // 플레이어 턴 실행
                 }
             }
         }
@@ -97,25 +91,27 @@ namespace Pokemon3D.BattleSystem
             if (isWildBattle)
             {
                 // 야생 포켓몬 등장 이펙트 실행
-                canvas.ShowBattleStartText(true);
+                canvas.ShowBattleText(BattleTextType.WildStart);
             }
             else
             {
-                canvas.ShowBattleStartText(false);
+                canvas.ShowBattleText(BattleTextType.NpcStart);
                 enemyPokemonUnit.Spawn();
             }
 
-            yield return new WaitForSeconds(3.5f);
+            yield return new WaitUntil(() => !canvas.IsTextAreaShowing);
 
-            canvas.ShowSpawnPokemonText(playerPokemonUnit.PokemonData.Base.Name);
+            canvas.ShowBattleText(BattleTextType.Spawn, playerPokemonUnit.PokemonData.Base.Name);
             playerPokemonUnit.Spawn();
 
-            yield return new WaitForSeconds(3.5f);
+            yield return new WaitUntil(() => !canvas.IsTextAreaShowing);
             canvas.ActiveBattleHud(true);
         }
 
         IEnumerator PlayerTurn()
         {
+            canvas.ActiveBattleHud(true);
+            canvas.ActiveActionButtons(true);
             currentState = BattleState.PlayerTurn;
 
             // 플레이어 턴 대기
@@ -135,22 +131,98 @@ namespace Pokemon3D.BattleSystem
             ConfirmPlayerTurn();
         }
 
-        IEnumerator AttackProcess(PokemonUnit attacker, PokemonUnit defender, ActionData actionData)
+        IEnumerator TurnProcess(PokemonUnit attacker, PokemonUnit defender, ActionData actionData)
         {
-            canvas.ShowPlayerPokemonAttackText(attacker.PokemonData.Base.Name, playerActionData.moveBase.name);
+            canvas.ActiveBattleHud(false);
+            // 기술 텍스트 출력
+            if (attacker.IsPlayerUnit) 
+                canvas.ShowBattleText(BattleTextType.PlayerAttack, playerPokemonUnit.PokemonData.Base.Name, playerActionData.moveBase.Name);
+            else
+                canvas.ShowBattleText(isWildBattle ? BattleTextType.WildEnemyAttack : BattleTextType.NpcEnemyAttack, enemyPokemonUnit.PokemonData.Base.Name, enemyActionData.moveBase.Name);
             yield return new WaitUntil(() => !canvas.IsTextAreaShowing);
+
+            canvas.ActiveBattleHud(true, defender);
+
+            // 기술 액션 시작
             yield return StartCoroutine(attacker.MoveAction(actionData.moveBase, defender.transform));
 
             // 상대 포켓몬 대미지 입음
-            int damage = CalculateDamage(attacker.PokemonData, defender.PokemonData, actionData.moveBase);
-            Debug.Log($"{attacker.PokemonData.Base.name}가 준 데미지 {damage}");
+            int damage = CalculateDamage(attacker.PokemonData, defender.PokemonData, actionData.moveBase, out AttackData attackData);
             defender.Hit(damage);
+            yield return new WaitUntil(() => !canvas.CheckBattleHudUpdating(defender));
 
-            yield return new WaitForSeconds(2.0f);
+            if (attackData.isEffectiveness)
+                canvas.ShowBattleText(BattleTextType.Effective);
+            else if (attackData.isIneffectiveness)
+                canvas.ShowBattleText(BattleTextType.Ineffective);
+            yield return new WaitUntil(() => !canvas.IsTextAreaShowing);
+            if (attackData.isCritical)
+                canvas.ShowBattleText(BattleTextType.Critical);
+            yield return new WaitUntil(() => !canvas.IsTextAreaShowing);
+
+            if (defender.IsDead)
+            {
+                if (defender.IsPlayerUnit)
+                    canvas.ShowBattleText(BattleTextType.PlayerFaint, playerPokemonUnit.PokemonData.Base.Name);
+                else
+                    canvas.ShowBattleText(isWildBattle ? BattleTextType.WildEnemyFaint : BattleTextType.NpcEnemyFaint, enemyPokemonUnit.PokemonData.Base.Name);
+                yield return new WaitUntil(() => !canvas.IsTextAreaShowing);
+
+                defender.Die();
+                canvas.ActiveBattleHud(false);
+
+                yield return new WaitUntil(() => defender.IsActionAnimationComplete);
+                StopAllCoroutines();
+
+                StartCoroutine(ResultProcess(defender));
+            }
         }
 
-        private int CalculateDamage(PokemonData attackerData, PokemonData defenderData, MoveBase move)
+        private IEnumerator ResultProcess(PokemonUnit faintPokemon)
         {
+            if (faintPokemon.IsPlayerUnit)
+            {
+                // 플레이어 죽었을 시 처리
+            }
+            else
+            {
+                canvas.ShowBattleText(BattleTextType.RewardExp, playerPokemonUnit.PokemonData.Base.Name, faintPokemon.PokemonData.RewardExp.ToString());
+                yield return new WaitUntil(() => !canvas.IsTextAreaShowing);
+
+                canvas.ActiveBattleHud(true, playerPokemonUnit);
+                playerPokemonUnit.PokemonData.CurrentExp += faintPokemon.PokemonData.RewardExp;
+
+                if (playerPokemonUnit.PokemonData.CurrentExp >= playerPokemonUnit.PokemonData.RequireExpToLevelup)
+                {
+                    int remainExp = 0;
+                    while (playerPokemonUnit.PokemonData.CurrentExp >= playerPokemonUnit.PokemonData.RequireExpToLevelup)
+                    {
+                        remainExp = playerPokemonUnit.PokemonData.CurrentExp - playerPokemonUnit.PokemonData.RequireExpToLevelup;
+                        playerPokemonUnit.PokemonData.CurrentExp = playerPokemonUnit.PokemonData.RequireExpToLevelup;
+                        canvas.UpdatePlayerExpBar();
+                        yield return new WaitUntil(() => !canvas.IsPlayerExpBarUpdating);
+
+                        playerPokemonUnit.PokemonData.Levelup();
+                        canvas.InitialPlayerHud(playerPokemonUnit);
+
+                        yield return new WaitForSeconds(1.0f);
+                        canvas.ShowBattleText(BattleTextType.Levelup, playerPokemonUnit.PokemonData.Base.Name, playerPokemonUnit.PokemonData.Level.ToString());
+                        yield return new WaitUntil(() => !canvas.IsTextAreaShowing);
+                        playerPokemonUnit.PokemonData.CurrentExp += remainExp;
+                    }
+                }
+
+                canvas.UpdatePlayerExpBar();
+                yield return new WaitUntil(() => !canvas.IsPlayerExpBarUpdating);
+                yield return new WaitForSeconds(1.0f);
+
+                GameFlowManager.Instance.EndBattle();
+            }
+        }
+
+        private int CalculateDamage(PokemonData attackerData, PokemonData defenderData, MoveBase move, out AttackData attackData)
+        {
+            attackData = new();
             // 1. 기초 값 계산
             float level = attackerData.Level;
             float power = move.Power;
@@ -175,6 +247,18 @@ namespace Pokemon3D.BattleSystem
             float random = Random.Range(0.85f, 1.0f);
             modifier *= stab * critical * typeEffectiveness * random;
 
+            if (critical == 1.5f)
+                attackData.isCritical = true;
+            if (typeEffectiveness > 1.0f)
+            {
+                attackData.isEffectiveness = true;
+                attackData.isIneffectiveness = false;
+            }
+            else if (typeEffectiveness < 0.5f)
+            {
+                attackData.isEffectiveness = false;
+                attackData.isIneffectiveness = true;
+            }
             return Mathf.FloorToInt(baseDamage * modifier);
         }
 

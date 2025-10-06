@@ -103,4 +103,25 @@ namespace Pokemon3D.Enum
         Switch,
         Run
     }
+
+    /// <summary>
+    /// 배틀 중 표시되는 텍스트 타입을 정의하는 열거형
+    /// </summary>
+    public enum BattleTextType
+    {
+        WildStart,          // 야생 포켓몬 등장 텍스트
+        NpcStart,           // 트레이너 포켓몬 등장 텍스트
+        Spawn,              // 플레이어 포켓몬 스폰 텍스트
+        PlayerAttack,       // 플레이어 포켓몬 공격 텍스트
+        WildEnemyAttack,    // 적 포켓몬 공격 텍스트
+        NpcEnemyAttack,     // 적 포켓몬 공격 텍스트
+        Ineffective,        // 효과가 별로인 텍스트
+        Effective,          // 효과가 굉장한 텍스트
+        Critical,           // 급소 공격 텍스트
+        PlayerFaint,        // 플레이어 포켓몬 기절 텍스트
+        WildEnemyFaint,     // 야생 포켓몬 기절 텍스트
+        NpcEnemyFaint,      // 트레이너 포켓몬 기절 텍스트
+        RewardExp,          // 경험치 획득
+        Levelup,            // 레벨 업
+    }
 }

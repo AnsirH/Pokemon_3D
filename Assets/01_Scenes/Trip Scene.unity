@@ -154,6 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dontDestroyOnLoad: 1
   testPokemonBase: {fileID: 11400000, guid: 8a7d078fa13143842b38b80aa2e95777, type: 2}
+  testPokemonLevel: 6
 --- !u!4 &11099293
 Transform:
   m_ObjectHideFlags: 0

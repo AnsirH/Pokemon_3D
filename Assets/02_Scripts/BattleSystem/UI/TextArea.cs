@@ -15,14 +15,6 @@ namespace Pokemon3D.BattleSystem.UI
 
         // variables
         float duration = 2.0f;
-        readonly string wildBattleStartText = "야생의 {0}(이)가 나타났다!";
-        readonly string npcBattleStartText = "{0}(이)가 승부를 걸어왔다!";
-        readonly string spawnPokemonText = "가랏! {0}!";
-        readonly string playerPokemonAttackText = "{0}의 {1} 공격!";
-        readonly string wildEnemyPokemonAttackText = "야생 {0}의 {1} 공격!";
-        readonly string npcEnemyPokemonAttackText = "상대 {0}의 {1} 공격!";
-        readonly string ineffectiveText = "효과가 별로인 듯 하다..";
-        readonly string effectiveText = "효과가 굉장했다!";
 
         // properties
         public bool IsShowing => textAreaObject.activeSelf;
@@ -52,47 +44,71 @@ namespace Pokemon3D.BattleSystem.UI
             this.duration = duration;
         }
 
-
-        // 각 텍스트마다 필요한 매개변수가 달라서 각 텍스트를 처리하는 메서드를 만들어서 호출하도록 함
-        public void ShowBattleStartText(bool isWildBattle)
+        /// <summary>
+        /// 통합된 텍스트 표시 메서드 - Facade 패턴 적용
+        /// </summary>
+        /// <param name="textType">표시할 텍스트 타입</param>
+        /// <param name="parameters">텍스트 포맷에 필요한 매개변수들</param>
+        public void ShowText(BattleTextType textType, params object[] parameters)
         {
-            if (isWildBattle)
-                text.text = string.Format(wildBattleStartText, BattleSystem.Instance.EnemyPokemon.Base.Name);
-            else
-                text.text = string.Format(npcBattleStartText, BattleSystem.Instance.EnemyPokemon.Base.Name);
-            ShowText();
-        }
+            switch (textType)
+            {
+                case BattleTextType.WildStart:
+                    text.text = string.Format(BattleTextManager.Instance.Get(textType), BattleSystem.Instance.EnemyPokemon.Base.Name);
+                    break;
 
-        public void ShowSpawnPokemonText(string pokemonName)
-        {
-            text.text = string.Format(spawnPokemonText, pokemonName);
-            ShowText();
-        }
+                case BattleTextType.NpcStart:
+                    text.text = string.Format(BattleTextManager.Instance.Get(textType), BattleSystem.Instance.EnemyPokemon.Base.Name);
+                    break;
 
-        public void ShowPlayerPokemonAttackText(string pokemonName, string moveName)
-        {
-            text.text = string.Format(playerPokemonAttackText, pokemonName, moveName);
-            ShowText();
-        }
+                case BattleTextType.Spawn:
+                    text.text = string.Format(BattleTextManager.Instance.Get(textType), (string)parameters[0]);
+                    break;
 
-        public void ShowEnemyPokemonAttackText(string pokemonName, string moveName, bool isWildBattle)
-        {
-            if (isWildBattle)
-                text.text = string.Format(wildEnemyPokemonAttackText, pokemonName, moveName);
-            else
-                text.text = string.Format(npcEnemyPokemonAttackText, pokemonName, moveName);
-            ShowText();
-        }
+                case BattleTextType.PlayerAttack:
+                    text.text = string.Format(BattleTextManager.Instance.Get(textType), (string)parameters[0], (string)parameters[1]);
+                    break;
 
-        public void ShowIneffectiveText()
-        {
-            text.text = ineffectiveText;
-            ShowText();
-        }
+                case BattleTextType.WildEnemyAttack:
+                    text.text = string.Format(BattleTextManager.Instance.Get(textType), (string)parameters[0], (string)parameters[1]);
+                    break;
 
-        public void ShowEffectiveText()
-        {
-            text.text = effectiveText;
+                case BattleTextType.NpcEnemyAttack:
+                    text.text = string.Format(BattleTextManager.Instance.Get(textType), (string)parameters[0], (string)parameters[1]);
+                    break;
+
+                case BattleTextType.Ineffective:
+                    text.text = BattleTextManager.Instance.Get(textType);
+                    break;
+
+                case BattleTextType.Effective:
+                    text.text = BattleTextManager.Instance.Get(textType);
+                    break;
+
+                case BattleTextType.Critical:
+                    text.text = BattleTextManager.Instance.Get(textType);
+                    break;
+
+                case BattleTextType.WildEnemyFaint:
+                    text.text = string.Format(BattleTextManager.Instance.Get(textType), (string)parameters[0]);
+                    break;
+
+                case BattleTextType.NpcEnemyFaint:
+                    text.text = string.Format(BattleTextManager.Instance.Get(textType), (string)parameters[0]);
+                    break;
+
+                case BattleTextType.RewardExp:
+                    text.text = string.Format(BattleTextManager.Instance.Get(textType), (string)parameters[0], (string)parameters[1]);
+                    break;
+
+                case BattleTextType.Levelup:
+                    text.text = string.Format(BattleTextManager.Instance.Get(textType), (string)parameters[0], (string)parameters[1]);
+                    break;
+
+                default:
+                    Debug.LogWarning($"Unknown BattleTextType: {textType}");
+                    break;
+            }
             ShowText();
         }
     }

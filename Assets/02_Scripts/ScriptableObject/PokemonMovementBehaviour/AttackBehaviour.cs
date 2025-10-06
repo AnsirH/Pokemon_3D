@@ -12,10 +12,7 @@ namespace Pokemon3D.ScriptableObj.PokemonMovementBehaviour
         public override IEnumerator PlayMovement(PokemonActionController pokemonActionController, Transform target)
         {
             pokemonActionController.PlayAttack(IsLeft);
-            while (!pokemonActionController.IsAnimationFinished())
-            {
-                yield return null;
-            }
+            yield return new WaitUntil(() => pokemonActionController.IsActionAnimationComplete);
         }
     }
 }
