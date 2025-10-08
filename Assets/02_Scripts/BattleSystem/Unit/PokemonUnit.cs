@@ -1,3 +1,4 @@
+using Pokemon3D.Enum;
 using Pokemon3D.Pokemon;
 using Pokemon3D.ScriptableObj;
 using Pokemon3D.ScriptableObj.PokemonMovementBehaviour;
@@ -15,8 +16,11 @@ namespace Pokemon3D.BattleSystem.Unit
         [SerializeField] Transform modelParent;
         [SerializeField] Animator unitAnim;
         [SerializeField] GameObject PokeBallObj;
+        [SerializeField] Transform hitEffectPoint;
+        [SerializeField] ParticleSystem buffEffect;
+        [SerializeField] ParticleSystem debuffEffect;
 
-        [Header("references")]
+        [Header("variables")]
         [SerializeField] bool isPlayerUnit;
 
         // evnets
@@ -25,6 +29,7 @@ namespace Pokemon3D.BattleSystem.Unit
         // variables
         GameObject pokemonModel;
         PokemonData pokemonData;
+        Dictionary<StatType, int> currentStat = new();
         // 애니메이션 파라미터 상수
         private readonly string spawnTrigger = "Spawn";
         private readonly string despawnTrigger = "Despawn";
@@ -34,6 +39,8 @@ namespace Pokemon3D.BattleSystem.Unit
         public bool IsPlayerUnit => isPlayerUnit;
         public bool IsDead => pokemonData.CurrentHp == 0;
         public bool IsActionAnimationComplete => actionController.IsActionAnimationComplete;
+        public bool IsBuffEffectComplete => (!buffEffect.isPlaying && !debuffEffect.isPlaying);
+        public Transform HitEffectPoint => hitEffectPoint;
 
         private void Awake()
         {
@@ -49,6 +56,8 @@ namespace Pokemon3D.BattleSystem.Unit
                 InstantiateModel(pokemonData.Base.Model, BattleSystem.Instance.IsWildBattle);
 
             this.pokemonData = pokemonData;
+            foreach (StatType stat in System.Enum.GetValues(typeof(StatType)))
+                currentStat[stat] = 0;
         }
 
         private void InstantiateModel(GameObject pokemonModel, bool isWild)
@@ -88,11 +97,6 @@ namespace Pokemon3D.BattleSystem.Unit
             OnHit?.Invoke();
         }
 
-        //public void Attack(MoveBase moveBase, PokemonUnit target)
-        //{
-        //    StartCoroutine(MoveAction(moveBase, target.transform));
-        //}
-
         public IEnumerator MoveAction(MoveBase moveBase, Transform target)
         {
             for (int i = 0; i < moveBase.PokemonBehaviours.Count; i++)
@@ -106,14 +110,31 @@ namespace Pokemon3D.BattleSystem.Unit
             actionController.PlayDie();
         }
 
-        public void GetExp(int value)
+        public void ChangeStat(StatChange statChange)
         {
-
+            if (currentStat.ContainsKey(statChange.Stat))
+            {
+                currentStat[statChange.Stat] += statChange.Stages;
+                currentStat[statChange.Stat] = Mathf.Clamp(currentStat[statChange.Stat], -6, 6);
+            }
         }
 
-        public void Levelup()
+        public void PlayBuffEffect(bool isBuff)
         {
-            pokemonData.Levelup();
+            if (isBuff)
+                buffEffect.Play();
+            else
+                debuffEffect.Play();
+        }
+
+        public float GetStatMultiplier(StatType statType)
+        {
+            if (currentStat[statType] == 0)
+                return 1.0f;
+            else if (currentStat[statType] > 0)
+                return (3 + currentStat[statType]) / 3;
+            else
+                return 3 / (3 + currentStat[statType]);
         }
     }
 }

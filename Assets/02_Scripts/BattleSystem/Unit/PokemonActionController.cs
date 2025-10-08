@@ -17,6 +17,7 @@ namespace Pokemon3D.BattleSystem.Unit
         private readonly string attackRightTrigger = "AttackRight";
         private readonly string gunLeftTrigger = "GunLeft";
         private readonly string gunRightTrigger = "GunRight";
+        private readonly string rageTrigger = "Rage";
         private readonly string hitTrigger = "Hit";
         private readonly string dieTrigger = "Die";
         private readonly string isMovingParameter = "IsMoving";
@@ -40,6 +41,12 @@ namespace Pokemon3D.BattleSystem.Unit
                 modelAnim.SetTrigger(gunLeftTrigger);
             else
                 modelAnim.SetTrigger(gunRightTrigger);
+            isActionAnimationComplete = false;
+        }
+
+        public void PlayRage()
+        {
+            modelAnim.SetTrigger(rageTrigger);
             isActionAnimationComplete = false;
         }
 

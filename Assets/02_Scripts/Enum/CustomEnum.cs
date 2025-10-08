@@ -123,5 +123,7 @@ namespace Pokemon3D.Enum
         NpcEnemyFaint,      // 트레이너 포켓몬 기절 텍스트
         RewardExp,          // 경험치 획득
         Levelup,            // 레벨 업
+        Buff,               // 버프
+        Debuff,             // 디버프
     }
 }

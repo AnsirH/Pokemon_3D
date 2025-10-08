@@ -25,7 +25,8 @@ MonoBehaviour:
   StatusChance: 0
   StatChanges: []
   Target: 0
-  EffectAnimation: {fileID: 0}
+  MoveEffectPrefab: {fileID: 0}
+  HitEffectPrefab: {fileID: 494334863381985242, guid: 76624220832179e4fb0ab0416acf0707, type: 3}
   SoundEffect: {fileID: 0}
   PokemonBehaviours:
   - {fileID: 11400000, guid: 9bab11e5214a6cd429fccbeb3a4e785f, type: 2}

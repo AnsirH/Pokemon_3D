@@ -12,7 +12,7 @@ using Pokemon3D.Utility;
 
 namespace Pokemon3D.BattleSystem
 {
-    public class BattleSystem : Singleton<BattleSystem>
+    public partial class BattleSystem : Singleton<BattleSystem>
     {
         [Header("references")]
         [SerializeField] BattleCanvas canvas;
@@ -25,7 +25,6 @@ namespace Pokemon3D.BattleSystem
         ActionData enemyActionData;
         Coroutine currentCoroutine;
         bool isWildBattle = true;
-        bool battleIsOver = false;
 
         // properties
         public PokemonData PlayerPokemon => playerPokemonUnit.PokemonData;
@@ -70,6 +69,7 @@ namespace Pokemon3D.BattleSystem
                 yield return new WaitUntil(() => currentState != BattleState.Processing);
 
                 canvas.ActiveActionButtons(false);
+                canvas.ActiveBattleHud(false);
                 if (CheckPlayerFirst())
                 {
                     yield return StartCoroutine(TurnProcess(playerPokemonUnit, enemyPokemonUnit, playerActionData)); // 플레이어 턴 실행
@@ -118,22 +118,16 @@ namespace Pokemon3D.BattleSystem
             yield return new WaitUntil(() => currentState != BattleState.EnemyTurn);
         }
 
-        private void ConfirmPlayerTurn()
-        {
-            if (playerActionData.type == ActionType.None) return;
-            currentState = BattleState.EnemyTurn;
-        }
-
         public void SelectPlayerMove(MoveBase moveBase)
         {
+            if (moveBase == null) return;
             playerActionData.type = ActionType.Attack;
             playerActionData.moveBase = moveBase;
-            ConfirmPlayerTurn();
+            currentState = BattleState.EnemyTurn;
         }
 
         IEnumerator TurnProcess(PokemonUnit attacker, PokemonUnit defender, ActionData actionData)
         {
-            canvas.ActiveBattleHud(false);
             // 기술 텍스트 출력
             if (attacker.IsPlayerUnit) 
                 canvas.ShowBattleText(BattleTextType.PlayerAttack, playerPokemonUnit.PokemonData.Base.Name, playerActionData.moveBase.Name);
@@ -141,41 +135,7 @@ namespace Pokemon3D.BattleSystem
                 canvas.ShowBattleText(isWildBattle ? BattleTextType.WildEnemyAttack : BattleTextType.NpcEnemyAttack, enemyPokemonUnit.PokemonData.Base.Name, enemyActionData.moveBase.Name);
             yield return new WaitUntil(() => !canvas.IsTextAreaShowing);
 
-            canvas.ActiveBattleHud(true, defender);
-
-            // 기술 액션 시작
-            yield return StartCoroutine(attacker.MoveAction(actionData.moveBase, defender.transform));
-
-            // 상대 포켓몬 대미지 입음
-            int damage = CalculateDamage(attacker.PokemonData, defender.PokemonData, actionData.moveBase, out AttackData attackData);
-            defender.Hit(damage);
-            yield return new WaitUntil(() => !canvas.CheckBattleHudUpdating(defender));
-
-            if (attackData.isEffectiveness)
-                canvas.ShowBattleText(BattleTextType.Effective);
-            else if (attackData.isIneffectiveness)
-                canvas.ShowBattleText(BattleTextType.Ineffective);
-            yield return new WaitUntil(() => !canvas.IsTextAreaShowing);
-            if (attackData.isCritical)
-                canvas.ShowBattleText(BattleTextType.Critical);
-            yield return new WaitUntil(() => !canvas.IsTextAreaShowing);
-
-            if (defender.IsDead)
-            {
-                if (defender.IsPlayerUnit)
-                    canvas.ShowBattleText(BattleTextType.PlayerFaint, playerPokemonUnit.PokemonData.Base.Name);
-                else
-                    canvas.ShowBattleText(isWildBattle ? BattleTextType.WildEnemyFaint : BattleTextType.NpcEnemyFaint, enemyPokemonUnit.PokemonData.Base.Name);
-                yield return new WaitUntil(() => !canvas.IsTextAreaShowing);
-
-                defender.Die();
-                canvas.ActiveBattleHud(false);
-
-                yield return new WaitUntil(() => defender.IsActionAnimationComplete);
-                StopAllCoroutines();
-
-                StartCoroutine(ResultProcess(defender));
-            }
+            yield return StartCoroutine(MoveProcess(attacker, defender, actionData));
         }
 
         private IEnumerator ResultProcess(PokemonUnit faintPokemon)
@@ -220,14 +180,18 @@ namespace Pokemon3D.BattleSystem
             }
         }
 
-        private int CalculateDamage(PokemonData attackerData, PokemonData defenderData, MoveBase move, out AttackData attackData)
+        private int CalculateDamage(PokemonUnit attacker, PokemonUnit defender, MoveBase move, out AttackData attackData)
         {
             attackData = new();
             // 1. 기초 값 계산
-            float level = attackerData.Level;
+            float level = attacker.PokemonData.Level;
             float power = move.Power;
-            float attack = move.Category == MoveCategory.Special ? attackerData.SpecialAttack : attackerData.Attack;
-            float defense = move.Category == MoveCategory.Special ? defenderData.SpecialDefense : defenderData.Defense;
+            float attack = move.Category == MoveCategory.Special ? 
+                attacker.PokemonData.SpecialAttack * attacker.GetStatMultiplier(StatType.SpecialAttack) : 
+                attacker.PokemonData.Attack * attacker.GetStatMultiplier(StatType.Attack);
+            float defense = move.Category == MoveCategory.Special ? 
+                defender.PokemonData.SpecialDefense * defender.GetStatMultiplier(StatType.SpecialDefense) :
+                defender.PokemonData.Defense * defender.GetStatMultiplier(StatType.Defense);
 
             // 2. 기본 공식
             float baseDamage = (((2f * level / 5f + 2f) * power * (attack / defense)) / 50f) + 2f;
@@ -235,14 +199,14 @@ namespace Pokemon3D.BattleSystem
             // 3. 배율 계산
             float modifier = 1.0f;
             // STAB: Same Type Attack Bonus
-            float stab = (attackerData.Base.Type_1 == move.Type || attackerData.Base.Type_2 == move.Type) ? 1.5f : 1f;
+            float stab = (attacker.PokemonData.Base.Type_1 == move.Type || attacker.PokemonData.Base.Type_2 == move.Type) ? 1.5f : 1f;
             // Critical( 10% 확률 )
             float critical = Random.value < 0.1f ? 1.5f : 1f;
             // TypeEffectiveness
             float typeEffectiveness = 1.0f;
-            typeEffectiveness *= TypeChart.GetEffectiveness(move.Type, defenderData.Base.Type_1);
-            if (defenderData.Base.Type_2 != PokemonType.None)
-                typeEffectiveness *= TypeChart.GetEffectiveness(move.Type, defenderData.Base.Type_2);
+            typeEffectiveness *= TypeChart.GetEffectiveness(move.Type, defender.PokemonData.Base.Type_1);
+            if (defender.PokemonData.Base.Type_2 != PokemonType.None)
+                typeEffectiveness *= TypeChart.GetEffectiveness(move.Type, defender.PokemonData.Base.Type_2);
             // Random( 0.85 ~ 1.0 )
             float random = Random.Range(0.85f, 1.0f);
             modifier *= stab * critical * typeEffectiveness * random;
@@ -274,14 +238,17 @@ namespace Pokemon3D.BattleSystem
         {
             if (playerActionData.moveBase.Priority == enemyActionData.moveBase.Priority)
             {
-                if (playerPokemonUnit.PokemonData.Speed == enemyPokemonUnit.PokemonData.Speed)
+                float playerSpeed = playerPokemonUnit.PokemonData.Speed * playerPokemonUnit.GetStatMultiplier(StatType.Speed);
+                float enemySpeed = enemyPokemonUnit.PokemonData.Speed * enemyPokemonUnit.GetStatMultiplier(StatType.Speed);
+
+                if (playerSpeed == enemySpeed)
                 {
                     if (Random.Range(0, 2) == 0) // 랜덤 선택. 0이면 플레이어가 선
                         return true;
                     else
                         return false;
                 }
-                else if (playerPokemonUnit.PokemonData.Speed > enemyPokemonUnit.PokemonData.Speed)
+                else if (playerSpeed > enemySpeed)
                     return true;
                 else
                     return false;

@@ -105,6 +105,14 @@ namespace Pokemon3D.BattleSystem.UI
                     text.text = string.Format(BattleTextManager.Instance.Get(textType), (string)parameters[0], (string)parameters[1]);
                     break;
 
+                case BattleTextType.Buff:
+                    text.text = string.Format(BattleTextManager.Instance.Get(textType), (string)parameters[0], (string)parameters[1]);
+                    break;
+
+                case BattleTextType.Debuff:
+                    text.text = string.Format(BattleTextManager.Instance.Get(textType), (string)parameters[0], (string)parameters[1]);
+                    break;
+
                 default:
                     Debug.LogWarning($"Unknown BattleTextType: {textType}");
                     break;

@@ -11,8 +11,31 @@ namespace Pokemon3D.BattleSystem
     {
         public StatType Stat;
         public int Stages;      // 증가/감소 단계
-        [Range(0f, 1f)]
-        public float Chance;    // 적용 확률
+
+        public string StatToString
+        {
+            get
+            {
+                switch (Stat)
+                {
+                    case StatType.Attack:
+                        return "공격";
+                    case StatType.Defense:
+                        return "방어";
+                    case StatType.SpecialAttack:
+                        return "특수공격";
+                    case StatType.SpecialDefense:
+                        return "특수방어";
+                    case StatType.Speed:
+                        return "스피드";
+                    case StatType.Accuracy:
+                        return "명중률";
+                    case StatType.Evasion:
+                        return "회피율";
+                }
+                return null;
+            }
+        }
     }
 
     public struct ActionData

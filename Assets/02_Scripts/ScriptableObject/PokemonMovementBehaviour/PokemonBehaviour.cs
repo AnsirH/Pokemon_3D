@@ -8,9 +8,6 @@ namespace Pokemon3D.ScriptableObj.PokemonMovementBehaviour
 {
     public abstract class PokemonBehaviour : ScriptableObject
     {
-        [Header("variables")]
-        public float movementSpeed;
-
         public abstract IEnumerator PlayMovement(PokemonActionController pokemonActionController, Transform target);
     }
 }
