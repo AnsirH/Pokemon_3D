@@ -9,6 +9,7 @@ using Pokemon3D.BattleSystem.Unit;
 using Pokemon3D.BattleSystem.UI;
 using Pokemon3D.ScriptableObj;
 using Pokemon3D.Utility;
+using Pokemon3D.Sound;
 
 namespace Pokemon3D.BattleSystem
 {
@@ -33,24 +34,23 @@ namespace Pokemon3D.BattleSystem
 
         private void Start()
         {
-            isWildBattle = GameFlowManager.Instance.BattleType == BattleOpponentType.Wild;
-            Initialize();
-            StartBattle();
+            //StartBattle();
         }
 
-        private void Initialize()
+        public void Initialize()
         {
+            isWildBattle = GameFlowManager.Instance.BattleType == BattleOpponentType.Wild;
             playerActionData = new();
             enemyActionData = new();
 
             playerPokemonUnit.Initialize(PokemonManager.Instance.HeadPokemon);
-            enemyPokemonUnit.Initialize(GameFlowManager.Instance.EnemyPokemon);
+            enemyPokemonUnit.Initialize(GameFlowManager.Instance.EnemyPokemonData);
 
             canvas.InitialPlayerHud(playerPokemonUnit);
             canvas.InitialEnemyHud(enemyPokemonUnit);
         }
 
-        private void StartBattle()
+        public void StartBattle()
         {
             if (currentCoroutine != null)
             {
@@ -146,6 +146,7 @@ namespace Pokemon3D.BattleSystem
             }
             else
             {
+                SoundManager.Instance.PlayVictoryMusic();
                 canvas.ShowBattleText(BattleTextType.RewardExp, playerPokemonUnit.PokemonData.Base.Name, faintPokemon.PokemonData.RewardExp.ToString());
                 yield return new WaitUntil(() => !canvas.IsTextAreaShowing);
 

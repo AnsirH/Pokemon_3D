@@ -17,6 +17,7 @@ namespace Pokemon3D.Player
         // 개인 변수들
         private bool isMoving => inputHandler.GetMovementInput().magnitude > 0.1f;
         private bool isInitialized = false;
+        private bool canMove = true;
 
         // properties
         public Vector3 MoveDirection => movement.GetMoveDirection();
@@ -61,8 +62,16 @@ namespace Pokemon3D.Player
             if (!isInitialized)
                 return;
 
-            movement.Move(inputHandler.GetMovementInput(), inputHandler.GetRunInput());
-            animatorController.MoveAnim(isMoving, inputHandler.GetMovementInput(), movement.GetCurrentSpeed(), inputHandler.GetRunInput());
+            if (canMove)
+            {
+                movement.Move(inputHandler.GetMovementInput(), inputHandler.GetRunInput());
+                animatorController.MoveAnim(isMoving, inputHandler.GetMovementInput(), movement.GetCurrentSpeed(), inputHandler.GetRunInput());
+            }
+            else
+            {
+                movement.Move(Vector3.zero, false);
+                animatorController.MoveAnim(false, Vector3.zero);
+            }
         }
 
         private void PlaySurfaceSoundStep()
@@ -73,6 +82,11 @@ namespace Pokemon3D.Player
         private void ExecuteSurfaceEvent()
         {
             surfaceChecker.CheckSurface().ExecuteSurfaceEvent(this);
+        }
+
+        public void SetCanMove(bool active)
+        {
+            canMove = active;
         }
     }
 }

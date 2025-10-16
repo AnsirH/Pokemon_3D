@@ -27,7 +27,7 @@ namespace Pokemon3D.Surface
             {
                 if (rand <= wildOccurrenceData.WildPokemonOccurrenceProbability[i].occurrenceProbability)
                 {
-                    GameFlowManager.Instance.StartBattle(
+                    EncounterManager.Instance.EncounterPokemon(
                         PokemonManager.Instance.CreatePokemonData(wildOccurrenceData.WildPokemonOccurrenceProbability[i].pokemonBase,wildOccurrenceData.MaxLevel, wildOccurrenceData.MinLevel),
                         BattleOpponentType.Wild);
                 }
